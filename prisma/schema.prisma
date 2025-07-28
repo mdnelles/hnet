@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id           Int      @id @default(autoincrement())
+  player_name  String
+
+  metrics      PlayerMetrics?
+  strength     StrengthAgility?
+  shooting     ShootingMetrics?
+  nonStation   NonStationaryShooting?
+  spotShooting SpotUpShooting?
+}
+
+model PlayerMetrics {
+  pid     Int    @id
+  player  Player @relation(fields: [pid], references: [id])
+  pos     String?
+  bf      Float?
+  hlen    Float?
+  hwid    Float?
+  hnos    Float?
+  hsho    Float?
+  reach   Float?
+  wgt     Float?
+  wing    Float?
+}
+
+model StrengthAgility {
+  pid     Int    @id
+  player  Player @relation(fields: [pid], references: [id])
+  pos     String?
+  lane    Float?
+  shut    Float?
+  sprint  Float?
+  svl     Float?
+  mvl     Float?
+  bench   Int?
+}
+
+model ShootingMetrics {
+  pid     Int    @id
+  player  Player @relation(fields: [pid], references: [id])
+  off_dribble_score Float?
+  spot_up_score     Float?
+  three_star_score  Float?
+  mid_star_score    Float?
+  three_side_score  Float?
+  mid_side_score    Float?
+  freethrow_pct     Float?
+}
+
+model NonStationaryShooting {
+  pid         Int    @id
+  player      Player @relation(fields: [pid], references: [id])
+  pos         String?
+  od_col_bl   Float?
+  od_col_br   Float?
+  od_col_top  Float?
+  od_15_bl    Float?
+  od_15_br    Float?
+  od_15_top   Float?
+  move_col    Float?
+  move_15     Float?
+}
+
+model SpotUpShooting {
+  pid       Int    @id
+  player    Player @relation(fields: [pid], references: [id])
+  pos       String?
+  nba_bl    Float?
+  nba_br    Float?
+  nba_cl    Float?
+  nba_cr    Float?
+  nba_top   Float?
+  col_bl    Float?
+  col_br    Float?
+  col_cl    Float?
+  col_cr    Float?
+  col_top   Float?
+  ft_bl     Float?
+  ft_br     Float?
+  ft_cl     Float?
+  ft_cr     Float?
+  ft_top    Float?
+}
