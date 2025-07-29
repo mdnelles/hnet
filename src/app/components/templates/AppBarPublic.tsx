@@ -22,6 +22,13 @@ export default function AppBarPublic() {
    useEffect(() => {
       const dark = localStorage.getItem("isDarkMode") === "TRUE";
       setIsDarkMode(dark);
+
+      if (dark) {
+         document.documentElement.classList.add("dark");
+      } else {
+         document.documentElement.classList.remove("dark");
+      }
+
       const session = JSON.parse(localStorage.getItem("session") || "null");
       if (session?.token) setSessionToken(session.token);
    }, []);
@@ -30,7 +37,10 @@ export default function AppBarPublic() {
       const newVal = !isDarkMode;
       setIsDarkMode(newVal);
       localStorage.setItem("isDarkMode", newVal ? "TRUE" : "FALSE");
-      alert("toggleDarkmode was clicked");
+
+      if (typeof document !== "undefined") {
+         document.documentElement.classList.toggle("dark", newVal);
+      }
    };
 
    const handleAuthAction = (action: string) => {

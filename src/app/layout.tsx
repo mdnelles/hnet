@@ -1,11 +1,9 @@
+// layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-// ✅ Import the Redux Provider
 import { ReduxProvider } from "@/store/provider";
 
-// Fonts
 const geistSans = Geist({
    variable: "--font-geist-sans",
    subsets: ["latin"],
@@ -23,15 +21,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
    children,
-}: Readonly<{
-   children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
    return (
-      <html lang='en'>
+      <html
+         lang='en'
+         className='h-full bg-white text-black dark:bg-zinc-900 dark:text-white'
+      >
          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
          >
-            {/* ✅ Wrap the entire app with ReduxProvider */}
             <ReduxProvider>{children}</ReduxProvider>
          </body>
       </html>
