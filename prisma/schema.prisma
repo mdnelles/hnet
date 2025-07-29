@@ -96,3 +96,14 @@ model SpotUpShooting {
   ft_cr     Float?
   ft_top    Float?
 }
+
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String
+  firstName  String?  // Optional
+  lastName   String?  // Optional
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
