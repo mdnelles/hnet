@@ -7,12 +7,18 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+   Dialog,
+   DialogContent,
+   DialogTrigger,
+   DialogTitle,
+} from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, User } from "lucide-react";
 import { useEffect, useState } from "react";
+import AppBarDialog from "../dialogs/AppBar";
 
 export default function AppBarPublic() {
    const [isDarkMode, setIsDarkMode] = useState(false);
@@ -81,72 +87,15 @@ export default function AppBarPublic() {
                         <DialogTrigger asChild>
                            <DropdownMenuItem>Login</DropdownMenuItem>
                         </DialogTrigger>
+                        <AppBarDialog
+                           handleAuthAction={handleAuthAction}
+                           setShowForgot={setShowForgot}
+                           showForgot={showForgot}
+                        />
                         <DialogContent className='max-w-sm'>
-                           <Tabs defaultValue='signin' className='w-full'>
-                              <TabsList className='grid w-full grid-cols-2'>
-                                 <TabsTrigger value='signin'>
-                                    Sign In
-                                 </TabsTrigger>
-                                 <TabsTrigger value='signup'>
-                                    Sign Up
-                                 </TabsTrigger>
-                              </TabsList>
-
-                              <TabsContent value='signin'>
-                                 <div className='flex flex-col gap-3 mt-4'>
-                                    <Input placeholder='Email address' />
-                                    <Input
-                                       placeholder='Password'
-                                       type='password'
-                                    />
-                                    <Button
-                                       onClick={() =>
-                                          handleAuthAction("sign in")
-                                       }
-                                    >
-                                       Sign In
-                                    </Button>
-                                    <button
-                                       className='text-sm underline'
-                                       onClick={() => setShowForgot(true)}
-                                    >
-                                       Forgot password?
-                                    </button>
-                                 </div>
-                              </TabsContent>
-
-                              <TabsContent value='signup'>
-                                 <div className='flex flex-col gap-3 mt-4'>
-                                    <Input placeholder='First name' />
-                                    <Input placeholder='Last name' />
-                                    <Input placeholder='Email address' />
-                                    <Input
-                                       placeholder='Password'
-                                       type='password'
-                                    />
-                                    <Button
-                                       onClick={() =>
-                                          handleAuthAction("sign up")
-                                       }
-                                    >
-                                       Sign Up
-                                    </Button>
-                                 </div>
-                              </TabsContent>
-
-                              {showForgot && (
-                                 <div className='flex flex-col gap-3 mt-4'>
-                                    <Input placeholder='Enter your email' />
-                                    <Button
-                                       onClick={() =>
-                                          handleAuthAction("forgot password")
-                                       }
-                                    >
-                                       Reset Password
-                                    </Button>
-                                 </div>
-                              )}
-                           </Tabs>
+                           <DialogTitle className='text-center text-lg font-bold'>
+                              Welcome to Hoops Net
+                           </DialogTitle>
                         </DialogContent>
                      </Dialog>
                   )}
