@@ -1,36 +1,45 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { set } from "date-fns";
 
-interface SessionState {
+export interface SessionState {
    id: number | null;
    email: string | null;
    name: string | null;
    token: string | null;
    userLevel: number | null;
-   role: string | null;
-   schoolId: number | null;
-   avatarUrl: string | null;
    lang: "en" | "es";
    darkMode: boolean;
+   isDrawerOpen?: boolean;
    loggedIn: boolean;
    demo: boolean;
    expiresAt: string | null;
+   user: {
+      id: number;
+      email: string;
+      name: string;
+      token: string;
+      userLevel: number;
+   };
 }
 
-const initialState: SessionState = {
+export const initialState: SessionState = {
    id: null,
    email: null,
    name: null,
    token: null,
    userLevel: null,
-   role: null,
-   schoolId: null,
-   avatarUrl: null,
    lang: "en",
    darkMode: false,
+   isDrawerOpen: false,
    loggedIn: false,
    demo: false,
    expiresAt: null,
+   user: {
+      id: 0,
+      email: "",
+      name: "",
+      token: "",
+      userLevel: 0,
+   },
 };
 
 const sessionSlice = createSlice({
