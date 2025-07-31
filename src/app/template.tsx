@@ -6,4 +6,5 @@ export default function PublicTemplateWrapper({
    children: React.ReactNode;
 }) {
    return <PublicTemplate>{children}</PublicTemplate>;
+   //return <div>{children}</div>;
 }

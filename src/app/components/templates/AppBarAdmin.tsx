@@ -104,7 +104,7 @@ export default function AppBarAdmin() {
    return (
       <div className='w-full flex justify-between items-center p-4 border-b bg-background'>
          {/* Left: Logo */}
-         <div className='font-bold text-xl'>Hoops Net</div>
+         <div className='font-bold text-xl'>Hoops Net(A)</div>
 
          {/* Center: Search */}
          <div className='w-1/2'>

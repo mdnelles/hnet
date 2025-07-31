@@ -39,7 +39,7 @@ export function DashboardLayout({
 
    return (
       <div className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-white"}`}>
-         <AppBarAdmin />
+         {/* <AppBarAdmin /> */}
          <div className='flex pt-14'>
             {/* Add pt-14 to account for AppBar height */}
             <Drawer />
