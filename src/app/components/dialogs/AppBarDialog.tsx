@@ -1,20 +1,26 @@
 import React from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
-import { DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface AppBarDialogProps {
+   open: boolean;
+   onOpenChange: (open: boolean) => void;
    handleAuthAction: (action: string) => void;
    setShowForgot: (show: boolean) => void;
    showForgot: boolean;
 }
 
-export default function AppBarDialog(props: AppBarDialogProps) {
-   const { handleAuthAction, setShowForgot, showForgot } = props;
+export default function AppBarDialog({
+   open,
+   onOpenChange,
+   handleAuthAction,
+   setShowForgot,
+   showForgot,
+}: AppBarDialogProps) {
    return (
-      <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
          <DialogContent className='max-w-sm'>
             <DialogTitle className='text-center text-lg font-bold'>
                Sign In or Sign Up
@@ -66,6 +72,6 @@ export default function AppBarDialog(props: AppBarDialogProps) {
                )}
             </Tabs>
          </DialogContent>
-      </>
+      </Dialog>
    );
 }

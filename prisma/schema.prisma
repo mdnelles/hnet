@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,45 +8,43 @@ datasource db {
 }
 
 model Player {
-  id           Int      @id @default(autoincrement())
+  id           Int                    @id @default(autoincrement())
   player_name  String
-
-  metrics      PlayerMetrics?
-  strength     StrengthAgility?
-  shooting     ShootingMetrics?
   nonStation   NonStationaryShooting?
+  metrics      PlayerMetrics?
+  shooting     ShootingMetrics?
   spotShooting SpotUpShooting?
+  strength     StrengthAgility?
 }
 
 model PlayerMetrics {
-  pid     Int    @id
-  player  Player @relation(fields: [pid], references: [id])
-  pos     String?
-  bf      Float?
-  hlen    Float?
-  hwid    Float?
-  hnos    Float?
-  hsho    Float?
-  reach   Float?
-  wgt     Float?
-  wing    Float?
+  pid    Int     @id
+  pos    String?
+  bf     Float?
+  hlen   Float?
+  hwid   Float?
+  hnos   Float?
+  hsho   Float?
+  reach  Float?
+  wgt    Float?
+  wing   Float?
+  player Player  @relation(fields: [pid], references: [id])
 }
 
 model StrengthAgility {
-  pid     Int    @id
-  player  Player @relation(fields: [pid], references: [id])
-  pos     String?
-  lane    Float?
-  shut    Float?
-  sprint  Float?
-  svl     Float?
-  mvl     Float?
-  bench   Int?
+  pid    Int     @id
+  pos    String?
+  lane   Float?
+  shut   Float?
+  sprint Float?
+  svl    Float?
+  mvl    Float?
+  bench  Int?
+  player Player  @relation(fields: [pid], references: [id])
 }
 
 model ShootingMetrics {
-  pid     Int    @id
-  player  Player @relation(fields: [pid], references: [id])
+  pid               Int    @id
   off_dribble_score Float?
   spot_up_score     Float?
   three_star_score  Float?
@@ -60,50 +52,55 @@ model ShootingMetrics {
   three_side_score  Float?
   mid_side_score    Float?
   freethrow_pct     Float?
+  player            Player @relation(fields: [pid], references: [id])
 }
 
 model NonStationaryShooting {
-  pid         Int    @id
-  player      Player @relation(fields: [pid], references: [id])
-  pos         String?
-  od_col_bl   Float?
-  od_col_br   Float?
-  od_col_top  Float?
-  od_15_bl    Float?
-  od_15_br    Float?
-  od_15_top   Float?
-  move_col    Float?
-  move_15     Float?
+  pid        Int     @id
+  pos        String?
+  od_col_bl  Float?
+  od_col_br  Float?
+  od_col_top Float?
+  od_15_bl   Float?
+  od_15_br   Float?
+  od_15_top  Float?
+  move_col   Float?
+  move_15    Float?
+  player     Player  @relation(fields: [pid], references: [id])
 }
 
 model SpotUpShooting {
-  pid       Int    @id
-  player    Player @relation(fields: [pid], references: [id])
-  pos       String?
-  nba_bl    Float?
-  nba_br    Float?
-  nba_cl    Float?
-  nba_cr    Float?
-  nba_top   Float?
-  col_bl    Float?
-  col_br    Float?
-  col_cl    Float?
-  col_cr    Float?
-  col_top   Float?
-  ft_bl     Float?
-  ft_br     Float?
-  ft_cl     Float?
-  ft_cr     Float?
-  ft_top    Float?
+  pid     Int     @id
+  pos     String?
+  nba_bl  Float?
+  nba_br  Float?
+  nba_cl  Float?
+  nba_cr  Float?
+  nba_top Float?
+  col_bl  Float?
+  col_br  Float?
+  col_cl  Float?
+  col_cr  Float?
+  col_top Float?
+  ft_bl   Float?
+  ft_br   Float?
+  ft_cl   Float?
+  ft_cr   Float?
+  ft_top  Float?
+  player  Player  @relation(fields: [pid], references: [id])
 }
 
-model User {
-  id         Int      @id @default(autoincrement())
-  email      String   @unique
-  password   String
-  firstName  String?  // Optional
-  lastName   String?  // Optional
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model Users {
+  id               Int       @id @default(autoincrement())
+  email            String    @unique(map: "email") @db.VarChar(255)
+  password         String    @db.VarChar(255)
+  name             String?   @db.VarChar(255)
+  userLevel        Int       @default(10)
+  profileImg       String?   @default("profile.png") @db.VarChar(255)
+  parentId         Int       @default(0)
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now()) @db.DateTime(0)
+  updatedAt        DateTime  @default(now()) @updatedAt @db.DateTime(0)
+  resetToken       String?   @db.VarChar(255)
+  resetTokenExpiry DateTime? @db.DateTime(0)
 }

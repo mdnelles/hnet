@@ -18,12 +18,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import AppBarDialog from "../dialogs/AppBar";
+import AppBarDialog from "../dialogs/AppBarDialog";
 
 export default function AppBarPublic() {
    const [isDarkMode, setIsDarkMode] = useState(false);
    const [sessionToken, setSessionToken] = useState<string | null>(null);
    const [showForgot, setShowForgot] = useState(false);
+   const [dialogOpen, setDialogOpen] = useState(false);
 
    useEffect(() => {
       const dark = localStorage.getItem("isDarkMode") === "TRUE";
@@ -83,21 +84,11 @@ export default function AppBarPublic() {
                         Logout
                      </DropdownMenuItem>
                   ) : (
-                     <Dialog>
-                        <DialogTrigger asChild>
-                           <DropdownMenuItem>Login</DropdownMenuItem>
-                        </DialogTrigger>
-                        <AppBarDialog
-                           handleAuthAction={handleAuthAction}
-                           setShowForgot={setShowForgot}
-                           showForgot={showForgot}
-                        />
-                        <DialogContent className='max-w-sm'>
-                           <DialogTitle className='text-center text-lg font-bold'>
-                              Welcome to Hoops Net
-                           </DialogTitle>
-                        </DialogContent>
-                     </Dialog>
+                     <>
+                        <DropdownMenuItem onClick={() => setDialogOpen(true)}>
+                           Login
+                        </DropdownMenuItem>
+                     </>
                   )}
                   <DropdownMenuItem
                      onClick={() => handleAuthAction("favorites")}
@@ -106,6 +97,13 @@ export default function AppBarPublic() {
                   </DropdownMenuItem>
                </DropdownMenuContent>
             </DropdownMenu>
+            <AppBarDialog
+               handleAuthAction={handleAuthAction}
+               setShowForgot={setShowForgot}
+               showForgot={showForgot}
+               open={dialogOpen}
+               onOpenChange={setDialogOpen}
+            />
          </div>
       </div>
    );
