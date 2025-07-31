@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { set } from "date-fns";
 
 interface SessionState {
    id: number | null;
@@ -36,6 +37,14 @@ const sessionSlice = createSlice({
    name: "session",
    initialState,
    reducers: {
+      setSession(state, action: PayloadAction<Partial<SessionState>>) {
+         Object.assign(state, action.payload);
+         state.loggedIn = true;
+      },
+      setSessionToken(state, action: PayloadAction<string | null>) {
+         state.token = action.payload;
+         state.loggedIn = !!action.payload;
+      },
       login(state, action: PayloadAction<Partial<SessionState>>) {
          Object.assign(state, action.payload);
          state.loggedIn = true;
@@ -55,6 +64,12 @@ const sessionSlice = createSlice({
    },
 });
 
-export const { login, logout, toggleDarkMode, setLang, updateProfile } =
-   sessionSlice.actions;
+export const {
+   login,
+   logout,
+   toggleDarkMode,
+   setLang,
+   updateProfile,
+   setSession,
+} = sessionSlice.actions;
 export default sessionSlice.reducer;

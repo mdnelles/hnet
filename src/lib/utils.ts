@@ -1,7 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { MAX_PRICE } from "./var";
-
 export function cn(...inputs: ClassValue[]) {
    return twMerge(clsx(inputs));
 }
@@ -39,13 +37,6 @@ export const returnDateToday = () => {
 // Helper function to handle numeric select values
 export const getSelectValue = (value: number) => {
    return value === 0 ? "" : value.toString();
-};
-
-export const resetSearch = (search: any) => {
-   search.resetSearch();
-   if (search.priceRange[0] !== 0 || search.priceRange[1] !== MAX_PRICE) {
-      search.updateSearch("priceRange", [0, MAX_PRICE]);
-   }
 };
 
 export function getUserLevel(): number | null {

@@ -7,12 +7,7 @@ import {
    DropdownMenuItem,
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-   Dialog,
-   DialogContent,
-   DialogTrigger,
-   DialogTitle,
-} from "@/components/ui/dialog";
+import toast from "react-hot-toast";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -50,8 +45,60 @@ export default function AppBarPublic() {
       }
    };
 
-   const handleAuthAction = (action: string) => {
-      alert(`${action} was clicked`);
+   const handleAuthAction = async (action: string) => {
+      if (action === "sign in") {
+         const emailInput = document.querySelector(
+            'input[placeholder="Email address"]'
+         ) as HTMLInputElement;
+         const passwordInput = document.querySelector(
+            'input[placeholder="Password"]'
+         ) as HTMLInputElement;
+
+         const email = emailInput?.value.trim();
+         const password = passwordInput?.value.trim();
+
+         if (!email || !password) {
+            toast.error("Email and password are required");
+            return;
+         }
+
+         try {
+            const res = await fetch("/api/auth/user/login", {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+               toast.success("Login successful");
+
+               // Save session to localStorage
+               const sessionData = {
+                  token: data.token,
+                  user: data.user,
+               };
+               localStorage.setItem("session", JSON.stringify(sessionData));
+
+               setSessionToken(data.token);
+               setDialogOpen(false); // Close dialog
+            } else {
+               toast.error(data.message || "Invalid credentials");
+            }
+         } catch (err) {
+            console.error("Login error:", err);
+            toast.error("Something went wrong");
+         }
+      }
+
+      if (action === "forgot password") {
+         toast("Forgot password handler not yet implemented");
+      }
+
+      if (action === "sign up") {
+         toast("Signup is handled in AppBarDialog");
+      }
    };
 
    return (
