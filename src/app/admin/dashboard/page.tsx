@@ -7,17 +7,17 @@ import { RootState } from "@/store"; // Import your Redux store types
 
 export default function AdminDashboard() {
    const dispatch = useDispatch();
-   const session = useSelector((state: RootState) => state.session); // Get session from Redux
+   const existingSession = JSON.parse(localStorage.getItem("session") || "{}");
    const router = useRouter();
-   const { token, email, name } = session.user;
+   const { token, email, name } = existingSession.user;
 
    useEffect(() => {
-      if (!session.user.token) {
+      if (!existingSession.user.token) {
          localStorage.clear();
          router.push("/login");
          return;
       }
-   }, [session.user.token, router, dispatch]);
+   }, [existingSession.user.token, router, dispatch]);
 
    if (!token) {
       return null;

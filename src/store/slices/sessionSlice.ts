@@ -1,11 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface SessionState {
-   id: number | null;
-   email: string | null;
-   name: string | null;
-   token: string | null;
-   userLevel: number | null;
    lang: "en" | "es";
    darkMode: boolean;
    isDrawerOpen?: boolean;
@@ -16,17 +11,12 @@ export interface SessionState {
       id: number;
       email: string;
       name: string;
-      token: string;
+      token: string | null;
       userLevel: number;
    };
 }
 
 export const initialState: SessionState = {
-   id: null,
-   email: null,
-   name: null,
-   token: null,
-   userLevel: null,
    lang: "en",
    darkMode: false,
    isDrawerOpen: false,
@@ -51,7 +41,7 @@ const sessionSlice = createSlice({
          state.loggedIn = true;
       },
       setSessionToken(state, action: PayloadAction<string | null>) {
-         state.token = action.payload;
+         state.user.token = action.payload;
          state.loggedIn = !!action.payload;
       },
       login(state, action: PayloadAction<Partial<SessionState>>) {

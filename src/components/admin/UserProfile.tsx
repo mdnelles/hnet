@@ -9,20 +9,19 @@ import {
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import toast from "react-hot-toast";
 
 import Link from "next/link";
 
 export function UserProfile() {
-   const darkMode = useSelector((state: RootState) => state.session.darkMode); // ✅ Get dark mode from Redux state
+   const existingSession = JSON.parse(localStorage.getItem("session") || "{}");
 
    const router = useRouter();
 
    const handleLogout = () => {
-      console.log("Logging out...");
-
-      setTimeout(() => (window.location.href = "/login"), 200);
+      localStorage.removeItem("session");
+      toast.success("Logged out successfully");
+      router.push("/login");
    };
 
    return (

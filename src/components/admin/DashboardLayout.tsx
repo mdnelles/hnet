@@ -5,7 +5,6 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useRouter } from "next/navigation";
-import AppBarAdmin from "@/app/components/templates/AppBarAdmin";
 import { Drawer } from "./Drawer";
 import { SessionState } from "@/store/slices/sessionSlice";
 
@@ -16,11 +15,12 @@ export function DashboardLayout({
    children: React.ReactNode;
    title?: string;
 }) {
-   const darkMode = useSelector((state: RootState) => state.session.darkMode);
+   const existingSession = JSON.parse(localStorage.getItem("session") || "{}");
+   const darkMode = existingSession?.darkMode || false;
    const isDrawerOpen = useSelector(
       (state: RootState) => state.session.isDrawerOpen
    );
-   const user: any = useSelector((state: RootState) => state.session.user);
+   const user: any = existingSession?.user || {};
    const router = useRouter();
 
    useEffect(() => {

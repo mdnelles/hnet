@@ -8,118 +8,86 @@ import {
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation"; // ✅ Add this at the top
+import { useRouter, usePathname } from "next/navigation"; // ✅ Add this at the top
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import AppBarDialog from "../dialogs/AppBarDialog";
 
 export default function AppBarPublic() {
    const router = useRouter(); // ✅ Initialize router
+   const pathname = usePathname();
    const [isDarkMode, setIsDarkMode] = useState(false);
-   const [sessionToken, setSessionToken] = useState<string | null>(null);
-   const [showForgot, setShowForgot] = useState(false);
-   const [dialogOpen, setDialogOpen] = useState(false);
+   const [userToken, setUserToken] = useState<string | null>(null);
 
    useEffect(() => {
-      const dark = localStorage.getItem("isDarkMode") === "TRUE";
+      const existingSession = JSON.parse(
+         localStorage.getItem("session") || "{}"
+      );
+      const dark = existingSession?.darkMode || false;
       setIsDarkMode(dark);
 
-      if (dark) {
-         document.documentElement.classList.add("dark");
-      } else {
-         document.documentElement.classList.remove("dark");
-      }
+      dark
+         ? document.documentElement.classList.add("dark")
+         : document.documentElement.classList.remove("dark");
 
-      const session = JSON.parse(localStorage.getItem("session") || "null");
-      if (session?.token) setSessionToken(session.token);
-   }, []);
+      const user = existingSession?.user || null;
+      if (user?.token) setUserToken(user.token);
+      else setUserToken(null);
+   }, [pathname]);
+
+   useEffect(() => {
+      console.log("userToken: ", userToken);
+   }, [userToken]);
+
+   const favorites = () => {
+      if (!userToken) {
+         toast.error("No favorites avaialbe");
+         return;
+      }
+   };
 
    const toggleDarkMode = () => {
       const newVal = !isDarkMode;
       setIsDarkMode(newVal);
-      localStorage.setItem("isDarkMode", newVal ? "TRUE" : "FALSE");
+      const existingSession = JSON.parse(
+         localStorage.getItem("session") || "{}"
+      );
+      localStorage.setItem(
+         "session",
+         JSON.stringify({
+            ...existingSession,
+            darkMode: newVal,
+         })
+      );
 
       if (typeof document !== "undefined") {
          document.documentElement.classList.toggle("dark", newVal);
       }
    };
 
-   const handleAuthAction = async (action: string) => {
-      if (action === "sign in") {
-         const emailInput = document.querySelector(
-            'input[placeholder="Email address"]'
-         ) as HTMLInputElement;
-         const passwordInput = document.querySelector(
-            'input[placeholder="Password"]'
-         ) as HTMLInputElement;
+   const login = () => {
+      router.push("/login");
+   };
 
-         const email = emailInput?.value.trim();
-         const password = passwordInput?.value.trim();
-
-         if (!email || !password) {
-            toast.error("Email and password are required");
-            return;
-         }
-
-         try {
-            const res = await fetch("/api/auth/user/login", {
-               method: "POST",
-               headers: { "Content-Type": "application/json" },
-               body: JSON.stringify({ email, password }),
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-               toast.success("Login successful");
-
-               // Save session to localStorage
-               const sessionData = {
-                  token: data.token,
-                  user: data.user,
-               };
-               localStorage.setItem("session", JSON.stringify(sessionData));
-
-               setSessionToken(data.token);
-               setDialogOpen(false); // Close dialog
-
-               if (data.user.userLevel === 1) {
-                  router.push("/admin/dashboard");
-               } else {
-                  router.push("/user/dashboard");
-               }
-            } else {
-               toast.error(data.message || "Invalid credentials");
-            }
-         } catch (err) {
-            console.error("Login error:", err);
-            toast.error("Something went wrong");
-         }
-      }
-
-      if (action === "forgot password") {
-         toast("Forgot password handler not yet implemented");
-      }
-
-      if (action === "sign up") {
-         toast("Signup is handled in AppBarDialog");
-      }
+   const logout = () => {
+      localStorage.removeItem("session");
+      setUserToken(null);
+      toast.success("Logged out successfully");
+      router.push("/login");
    };
 
    return (
       <div className='w-full flex justify-between items-center p-4 border-b bg-background'>
          {/* Left: Logo */}
-         <div className='font-bold text-xl'>Hoops Net</div>
+         <div className='font-bold text-xl'>HoopsNet.io</div>
 
          {/* Center: Search */}
          <div className='w-1/2'>
             <Input placeholder='Search player or team...' className='w-full' />
          </div>
 
-         {/* Right: Dark Mode + Avatar */}
          <div className='flex items-center gap-4'>
             <Button variant='ghost' size='icon' onClick={toggleDarkMode}>
                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -132,33 +100,22 @@ export default function AppBarPublic() {
                   </Button>
                </DropdownMenuTrigger>
                <DropdownMenuContent align='end'>
-                  {sessionToken ? (
-                     <DropdownMenuItem
-                        onClick={() => handleAuthAction("logout")}
-                     >
+                  {userToken ? (
+                     <DropdownMenuItem onClick={() => logout()}>
                         Logout
                      </DropdownMenuItem>
                   ) : (
                      <>
-                        <DropdownMenuItem onClick={() => setDialogOpen(true)}>
+                        <DropdownMenuItem onClick={() => login()}>
                            Login
                         </DropdownMenuItem>
                      </>
                   )}
-                  <DropdownMenuItem
-                     onClick={() => handleAuthAction("favorites")}
-                  >
+                  <DropdownMenuItem onClick={() => favorites()}>
                      Favorites
                   </DropdownMenuItem>
                </DropdownMenuContent>
             </DropdownMenu>
-            <AppBarDialog
-               handleAuthAction={handleAuthAction}
-               setShowForgot={setShowForgot}
-               showForgot={showForgot}
-               open={dialogOpen}
-               onOpenChange={setDialogOpen}
-            />
          </div>
       </div>
    );

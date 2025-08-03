@@ -65,10 +65,11 @@ const menuSections = [
 
 export function Drawer() {
    const dispatch = useDispatch();
+   const existingSession = JSON.parse(localStorage.getItem("session") || "{}");
    const isDrawerOpen = useSelector(
       (state: RootState) => state.session.isDrawerOpen
    ); // ✅ Get isDrawerOpen from Redux state
-   const darkMode = useSelector((state: RootState) => state.session.darkMode); // ✅ Get darkMode from Redux state
+   const darkMode = existingSession?.darkMode || false; // ✅ Get darkMode from session
 
    return (
       <div

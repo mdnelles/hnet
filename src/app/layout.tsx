@@ -31,7 +31,7 @@ export default function RootLayout({
          <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
          >
-            <Toaster position='bottom-left' />
+            <Toaster position='bottom-center' />
             <ReduxProvider>{children}</ReduxProvider>
          </body>
       </html>

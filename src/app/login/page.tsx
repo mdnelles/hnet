@@ -22,7 +22,8 @@ export default function LoginForm() {
    const [isLoading, setIsLoading] = useState(false);
    const router = useRouter();
    const dispatch = useDispatch();
-   const darkMode = useSelector((state: RootState) => state.session.darkMode); // ✅ Get dark mode from Redux state
+   const existingSession = JSON.parse(localStorage.getItem("session") || "{}");
+   const darkMode = existingSession?.darkMode || false;
 
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -59,10 +60,23 @@ export default function LoginForm() {
                profileImg: data.user.profileImg,
             };
 
-            // ✅ Dispatch Redux action to update session state
-            dispatch(setSession({ user }));
+            const updatedSession = {
+               ...existingSession,
+               user,
+            };
 
-            localStorage.setItem("user", JSON.stringify(user)); // ✅ Store token locally
+            localStorage.setItem("session", JSON.stringify(updatedSession));
+
+            // ✅ Dispatch Redux action to update session state
+            dispatch(setSession(updatedSession));
+
+            const session = {
+               user,
+               token: user.token, // if token is part of user
+               darkMode,
+            };
+
+            localStorage.setItem("session", JSON.stringify(session));
 
             router.push(
                data.user.userLevel === 1 ? "/admin/dashboard" : "/profile"
