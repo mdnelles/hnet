@@ -8,6 +8,7 @@ import {
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation"; // ✅ Add this at the top
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import { useEffect, useState } from "react";
 import AppBarDialog from "../dialogs/AppBarDialog";
 
 export default function AppBarPublic() {
+   const router = useRouter(); // ✅ Initialize router
    const [isDarkMode, setIsDarkMode] = useState(false);
    const [sessionToken, setSessionToken] = useState<string | null>(null);
    const [showForgot, setShowForgot] = useState(false);
@@ -83,6 +85,12 @@ export default function AppBarPublic() {
 
                setSessionToken(data.token);
                setDialogOpen(false); // Close dialog
+
+               if (data.user.userLevel === 1) {
+                  router.push("/admin/dashboard");
+               } else {
+                  router.push("/user/dashboard");
+               }
             } else {
                toast.error(data.message || "Invalid credentials");
             }
